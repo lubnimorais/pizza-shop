@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   return (
-    <div className='h-screen'>
+    <div>
       <h1>Dashboard</h1>
     </div>
   );
