@@ -1,22 +1,35 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { ArrowRight, Search, X } from 'lucide-react';
+import { OrderDetails } from './order-details';
 
 export function OrderTableRow() {
   return (
     <TableRow>
       <TableCell>
-        <Button variant='outline' size='xs'>
-          {/**
-           * como o botão para o leitor de tela não quer dizer nada
-           * vamos colocar um span e colocar ele como sr-only para
-           * ser visível para o leitor de tela
-           */}
-          <Search className='h3- w-3' />
-          <span className='sr-only'>Detalhes do pedido</span>
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant='outline' size='xs'>
+              {/**
+               * como o botão para o leitor de tela não quer dizer nada
+               * vamos colocar um span e colocar ele como sr-only para
+               * ser visível para o leitor de tela
+               */}
+              <Search className='h3- w-3' />
+              <span className='sr-only'>Detalhes do pedido</span>
+            </Button>
+          </DialogTrigger>
+
+          <OrderDetails />
+        </Dialog>
       </TableCell>
 
       <TableCell className='font-mono font-medium text-xs'>

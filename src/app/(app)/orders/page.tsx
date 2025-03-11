@@ -7,8 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { OrderTableRow } from './components/OrderTableRow';
+import { OrderTableRow } from './components/order-table-row';
 import { OrderTableFilter } from './components/order-table-filter';
+import { Pagination } from '@/components/Pagination';
 
 export const metadata: Metadata = {
   title: 'Pedidos | pizza.shop',
@@ -48,6 +49,8 @@ export default function OrdersPage() {
             </TableBody>
           </Table>
         </div>
+
+        <Pagination pageIndex={0} totalCount={105} perPage={10} />
       </div>
     </div>
   );
