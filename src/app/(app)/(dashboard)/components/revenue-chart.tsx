@@ -9,7 +9,6 @@ import {
   YAxis,
   CartesianGrid,
   Line,
-  Tooltip,
 } from 'recharts';
 
 import {
@@ -80,6 +79,8 @@ export function RevenueChart() {
                 })
               }
             />
+
+            <CartesianGrid vertical={false} className='stroke-muted' />
 
             <Line
               type='linear'
