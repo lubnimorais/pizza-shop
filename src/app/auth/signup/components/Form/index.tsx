@@ -10,6 +10,10 @@ import { useForm } from 'react-hook-form';
 
 import { toast } from 'sonner';
 
+import { registerRestaurant } from '@/api/register-restaurant';
+
+import { useMutation } from '@tanstack/react-query';
+
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -34,6 +38,10 @@ export function FormSignUp() {
     resolver: zodResolver(signUpFormSchema),
   });
 
+  const { mutateAsync: registerRestaurantMutate } = useMutation({
+    mutationFn: registerRestaurant,
+  });
+
   async function handleSingUp({
     restaurantName,
     managerName,
@@ -41,15 +49,18 @@ export function FormSignUp() {
     phone,
   }: ISignUpFormData) {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      console.log(restaurantName, managerName, email, phone);
+      await registerRestaurantMutate({
+        restaurantName,
+        managerName,
+        email,
+        phone,
+      });
 
       toast.success('Restaurante cadastrado com sucesso!', {
         action: {
           label: 'Login',
           onClick: () => {
-            return navigate.push('/auth/signin');
+            return navigate.push(`/auth/signin?email=${email}`);
           },
         },
       });

@@ -10,8 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default function SignInPage() {
-  // const { register, handleSubmit } = useForm();
-
   return (
     <div className='p-8'>
       <Button asChild variant='ghost' className='absolute right-8 top-8'>

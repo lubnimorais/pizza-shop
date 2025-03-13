@@ -4,7 +4,11 @@ import { Geist, Geist_Mono } from 'next/font/google';
 
 import { Toaster } from 'sonner';
 
+import { QueryClientProvider } from '@tanstack/react-query';
+
 import { ThemeProvider } from '@/components/Theme/ThemeProvider';
+
+import { queryClient } from '@/lib/react-query';
 
 import '../styles/globals.css';
 
@@ -31,11 +35,13 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning className='antialiased'>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <ThemeProvider attribute='class'>
-          <Toaster richColors />
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider attribute='class'>
+            <Toaster richColors />
 
-          {children}
-        </ThemeProvider>
+            {children}
+          </ThemeProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );
