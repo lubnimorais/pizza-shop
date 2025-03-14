@@ -1,6 +1,8 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { Building, ChevronDown, LogOut } from 'lucide-react';
 
@@ -8,6 +10,7 @@ import { Skeleton } from '../ui/skeleton';
 
 import { getProfile } from '@/api/get-profile';
 import { getManagerRestaurant } from '@/api/get-managed-restaurant';
+import { signOut } from '@/api/sign-out';
 
 import { Button } from '../ui/button';
 import { Dialog, DialogTrigger } from '../ui/dialog';
@@ -22,15 +25,31 @@ import {
 import { StoreProfileDialog } from '../StoreProfileDialog';
 
 export function AccountMenu() {
+  const router = useRouter();
+
   const { data: profile, isLoading: isLoadingProfile } = useQuery({
     queryKey: ['profile'],
     queryFn: getProfile,
+    staleTime: Number.POSITIVE_INFINITY,
   });
 
   const { data: managedRestaurant, isLoading: isLoadingManagedRestaurant } =
     useQuery({
       queryKey: ['managed-restaurant'],
       queryFn: getManagerRestaurant,
+      staleTime: Number.POSITIVE_INFINITY, // tempo para a informação ficar desatualizada (obsoleto)
+    });
+  // Infinity porque os dados do restaurante não são dados que ficam mudando o tempo todo
+
+  const { mutateAsync: signOutMutate, isPending: isLoadingSignOut } =
+    useMutation({
+      mutationFn: signOut,
+      onSuccess: () => {
+        // VAI SUBSTITUIR A ROTA AO INVÉS DE ENVIAR O USUÁRIO PARA UMA NOVA ROTA
+        // VAI FAZER COM QUE O USUÁRIO NÃO POSSA CLICAR NO BOTÃO DE VOLTAR
+        // E VOLTAR NOVAMENTE PARA A DASHBOARD
+        router.replace('/auth/signin');
+      },
     });
 
   return (
@@ -86,10 +105,16 @@ export function AccountMenu() {
             </DropdownMenuItem>
           </DialogTrigger>
 
-          <DropdownMenuItem className='text-rose-500 dark:text-rose-400'>
-            <LogOut className='w-4 h-4 mr-2' />
+          <DropdownMenuItem
+            asChild
+            className='text-rose-500 dark:text-rose-400'
+            disabled={isLoadingSignOut}
+          >
+            <button className='w-full' onClick={() => signOutMutate()}>
+              <LogOut className='w-4 h-4 mr-2' />
 
-            <span>Sair</span>
+              <span>Sair</span>
+            </button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
