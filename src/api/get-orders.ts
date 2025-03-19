@@ -7,7 +7,7 @@ export interface IGetOrdersQuery {
   status?: string | null;
 }
 
-interface IGetOrdersResponse {
+export interface IGetOrdersResponse {
   orders: {
     orderId: string;
     createdAt: string;

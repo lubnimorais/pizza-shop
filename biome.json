@@ -18,6 +18,9 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "complexity": {
+        "noForEach": "off"
+      },
       "a11y": {
         "noSvgWithoutTitle": "off",
         "useButtonType": "off"
@@ -29,14 +32,23 @@
   },
   "javascript": {
     "formatter": {
+      "attributePosition": "auto",
       "arrowParentheses": "always",
+      "bracketSpacing": true,
+      "bracketSameLine": false,
       "jsxQuoteStyle": "single",
       "quoteProperties": "asNeeded",
       "quoteStyle": "single",
       "semicolons": "always",
-      "trailingCommas": "es5",
-      "bracketSpacing": true,
-      "attributePosition": "auto"
+      "trailingCommas": "es5"
     }
-  }
+  },
+  "overrides": [
+    {
+      "include": ["*.json"],
+      "formatter": {
+        "indentWidth": 2
+      }
+    }
+  ]
 }
