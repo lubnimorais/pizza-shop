@@ -1,4 +1,5 @@
 import { Header } from '@/components/Header';
+import { AppProvider } from '@/hooks';
 
 export default function AppLayout({
   children,
@@ -6,10 +7,12 @@ export default function AppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className='min-h-screen flex flex-col'>
-      <Header />
+    <AppProvider>
+      <div className='min-h-screen flex flex-col'>
+        <Header />
 
-      <div className='flex flex-1 flex-col gap-4 p-8 pt-6'>{children}</div>
-    </div>
+        <div className='flex flex-1 flex-col gap-4 p-8 pt-6'>{children}</div>
+      </div>
+    </AppProvider>
   );
 }

@@ -1,4 +1,4 @@
-type IOrderStatus =
+export type IOrderStatus =
   | 'pending'
   | 'canceled'
   | 'processing'

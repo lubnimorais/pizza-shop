@@ -1,8 +1,18 @@
+'use client';
+
 import { Utensils } from 'lucide-react';
 
+import { useQuery } from '@tanstack/react-query';
+
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { getDayOrdersAmount } from '@/api/get-day-orders-amount';
 
 export function DayOrdersAmountCard() {
+  const { data: dayOrdersAmount } = useQuery({
+    queryKey: ['metrics', 'day-orders-amounts'],
+    queryFn: getDayOrdersAmount,
+  });
+
   return (
     <Card>
       <CardHeader className='flex-row items-center justify-between space-y-0 pb-2'>

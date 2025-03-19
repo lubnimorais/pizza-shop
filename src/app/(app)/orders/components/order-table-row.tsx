@@ -9,13 +9,17 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { cancelOrder, type ICancelOrderParams } from '@/api/cancel-order';
 import type { IGetOrdersResponse } from '@/api/get-orders';
+import { approveOrder, type IApproveOrderParams } from '@/api/approve-order';
+import { deliverOrder, type IDeliverOrderParams } from '@/api/deliver-order';
 
 import { OrderDetails } from './order-details';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { OrderStatus } from '@/components/OrderStatus';
+
+import { type IOrderStatus, OrderStatus } from '@/components/OrderStatus';
+import { dispatchOrder, type IDispatchOrderParams } from '@/api/dispatch-order';
 
 interface IOrderTableRow {
   order: {
@@ -32,40 +36,72 @@ export function OrderTableRow({ order }: IOrderTableRow) {
 
   const queryClient = useQueryClient();
 
-  const { mutateAsync: cancelOrderMutate } = useMutation({
-    mutationFn: ({ orderId }: ICancelOrderParams) => cancelOrder({ orderId }),
-    onSuccess: async (_, { orderId }) => {
-      /**
-       * A LISTAGEM DE PEDIDOS NÃO TEM SOMENTE UMA QUERY SENDO FEITA
-       * A LISTA E PEDIDOS ESTÁ DISTRIBUÍDA EM VÁRIAS QUERIES KEYS
-       * SÓ QUE É COMUM ENTRE ELAS É QUE TODAS TEM A CHAVE 'ORDERS'
-       * TODAS COMEÇAM COM 'ORDERS'
-       */
-      const ordersListCache = queryClient.getQueriesData<IGetOrdersResponse>({
-        queryKey: ['orders'],
+  function updateOrderStatusOnCache(orderId: string, status: IOrderStatus) {
+    /**
+     * A LISTAGEM DE PEDIDOS NÃO TEM SOMENTE UMA QUERY SENDO FEITA
+     * A LISTA E PEDIDOS ESTÁ DISTRIBUÍDA EM VÁRIAS QUERIES KEYS
+     * SÓ QUE É COMUM ENTRE ELAS É QUE TODAS TEM A CHAVE 'ORDERS'
+     * TODAS COMEÇAM COM 'ORDERS'
+     */
+    const ordersListCache = queryClient.getQueriesData<IGetOrdersResponse>({
+      queryKey: ['orders'],
+    });
+
+    ordersListCache.forEach(([cacheKey, cacheData]) => {
+      if (!cacheData) {
+        return;
+      }
+
+      queryClient.setQueryData<IGetOrdersResponse>(cacheKey, {
+        ...cacheData,
+        orders: cacheData.orders.map((order) => {
+          if (order.orderId === orderId) {
+            return {
+              ...order,
+              status,
+            };
+          }
+
+          return order;
+        }),
       });
+    });
+  }
 
-      ordersListCache.forEach(([cacheKey, cacheData]) => {
-        if (!cacheData) {
-          return;
-        }
+  const { mutateAsync: cancelOrderMutate, isPending: isCancelingOrder } =
+    useMutation({
+      mutationFn: ({ orderId }: ICancelOrderParams) => cancelOrder({ orderId }),
+      onSuccess: async (_, { orderId }) => {
+        updateOrderStatusOnCache(orderId, 'canceled');
+      },
+    });
 
-        queryClient.setQueryData<IGetOrdersResponse>(cacheKey, {
-          ...cacheData,
-          orders: cacheData.orders.map((order) => {
-            if (order.orderId === orderId) {
-              return {
-                ...order,
-                status: 'canceled',
-              };
-            }
+  const { mutateAsync: approveOrderMutate, isPending: isApprovingOrder } =
+    useMutation({
+      mutationFn: ({ orderId }: IApproveOrderParams) =>
+        approveOrder({ orderId }),
+      onSuccess: async (_, { orderId }) => {
+        updateOrderStatusOnCache(orderId, 'processing');
+      },
+    });
 
-            return order;
-          }),
-        });
-      });
-    },
-  });
+  const { mutateAsync: dispatchOrderMutate, isPending: isDispatchingOrder } =
+    useMutation({
+      mutationFn: ({ orderId }: IDispatchOrderParams) =>
+        dispatchOrder({ orderId }),
+      onSuccess: async (_, { orderId }) => {
+        updateOrderStatusOnCache(orderId, 'delivering');
+      },
+    });
+
+  const { mutateAsync: deliverOrderMutate, isPending: isDeliveringOrder } =
+    useMutation({
+      mutationFn: ({ orderId }: IDeliverOrderParams) =>
+        deliverOrder({ orderId }),
+      onSuccess: async (_, { orderId }) => {
+        updateOrderStatusOnCache(orderId, 'delivered');
+      },
+    });
 
   return (
     <TableRow>
@@ -117,17 +153,51 @@ export function OrderTableRow({ order }: IOrderTableRow) {
       </TableCell>
 
       <TableCell>
-        <Button variant='outline' size='xs'>
-          <ArrowRight className='h-3 w-3 mr-2' />
-          Aprovar
-        </Button>
+        {order.status === 'pending' && (
+          <Button
+            variant='outline'
+            size='xs'
+            disabled={isApprovingOrder}
+            onClick={() => approveOrderMutate({ orderId: order.orderId })}
+          >
+            <ArrowRight className='h-3 w-3 mr-2' />
+            Aprovar
+          </Button>
+        )}
+
+        {order.status === 'processing' && (
+          <Button
+            variant='outline'
+            size='xs'
+            disabled={isDispatchingOrder}
+            onClick={() => dispatchOrderMutate({ orderId: order.orderId })}
+          >
+            <ArrowRight className='h-3 w-3 mr-2' />
+            Em entrega
+          </Button>
+        )}
+
+        {order.status === 'delivering' && (
+          <Button
+            variant='outline'
+            size='xs'
+            disabled={isDeliveringOrder}
+            onClick={() => deliverOrderMutate({ orderId: order.orderId })}
+          >
+            <ArrowRight className='h-3 w-3 mr-2' />
+            Entregue
+          </Button>
+        )}
       </TableCell>
 
       <TableCell>
         <Button
           variant='ghost'
           size='xs'
-          disabled={!['pending', 'processing'].includes(order.status)}
+          disabled={
+            !['pending', 'processing'].includes(order.status) ||
+            isCancelingOrder
+          }
           onClick={() => cancelOrderMutate({ orderId: order.orderId })}
         >
           <X className='h-3 w-3 mr-2' />

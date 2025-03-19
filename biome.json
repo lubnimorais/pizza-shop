@@ -19,7 +19,8 @@
     "rules": {
       "recommended": true,
       "complexity": {
-        "noForEach": "off"
+        "noForEach": "off",
+        "noUselessCatch": "off"
       },
       "a11y": {
         "noSvgWithoutTitle": "off",
@@ -27,6 +28,9 @@
       },
       "suspicious": {
         "noArrayIndexKey": "info"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "off"
       }
     }
   },
