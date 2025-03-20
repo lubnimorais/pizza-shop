@@ -21,6 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { OrderStatus } from '@/components/OrderStatus';
+import { OrderDetailsSkeleton } from './order-details-skeleton';
 
 interface IOrderDetailsProps {
   orderId: string;
@@ -41,45 +42,45 @@ export function OrderDetails({ orderId, open }: IOrderDetailsProps) {
         <DialogDescription>Detalhes do pedido</DialogDescription>
       </DialogHeader>
 
-      {order && (
-        <div className='space-y-6'>
+      {order ? (
+        <div className="space-y-6">
           <Table>
             <TableBody>
               <TableRow>
-                <TableCell className='text-muted-foreground'>Status</TableCell>
-                <TableCell className='flex justify-end'>
+                <TableCell className="text-muted-foreground">Status</TableCell>
+                <TableCell className="flex justify-end">
                   <OrderStatus status={order.status} />
                 </TableCell>
               </TableRow>
 
               <TableRow>
-                <TableCell className='text-muted-foreground'>Cliente</TableCell>
-                <TableCell className='flex justify-end'>
+                <TableCell className="text-muted-foreground">Cliente</TableCell>
+                <TableCell className="flex justify-end">
                   {order.customer.name}
                 </TableCell>
               </TableRow>
 
               <TableRow>
-                <TableCell className='text-muted-foreground'>
+                <TableCell className="text-muted-foreground">
                   Telefone
                 </TableCell>
-                <TableCell className='flex justify-end'>
+                <TableCell className="flex justify-end">
                   {order.customer.phone ?? 'Não informado'}
                 </TableCell>
               </TableRow>
 
               <TableRow>
-                <TableCell className='text-muted-foreground'>E-mail</TableCell>
-                <TableCell className='flex justify-end'>
+                <TableCell className="text-muted-foreground">E-mail</TableCell>
+                <TableCell className="flex justify-end">
                   {order.customer.email}
                 </TableCell>
               </TableRow>
 
               <TableRow>
-                <TableCell className='text-muted-foreground'>
+                <TableCell className="text-muted-foreground">
                   Realizado há
                 </TableCell>
-                <TableCell className='flex justify-end'>
+                <TableCell className="flex justify-end">
                   {formatDistanceToNow(order.createdAt, {
                     locale: ptBR,
                     addSuffix: true,
@@ -93,9 +94,9 @@ export function OrderDetails({ orderId, open }: IOrderDetailsProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Produto</TableHead>
-                <TableHead className='text-right'>Qtd. </TableHead>
-                <TableHead className='text-right'>Preço</TableHead>
-                <TableHead className='text-right'>Subtotal</TableHead>
+                <TableHead className="text-right">Qtd. </TableHead>
+                <TableHead className="text-right">Preço</TableHead>
+                <TableHead className="text-right">Subtotal</TableHead>
               </TableRow>
             </TableHeader>
 
@@ -103,14 +104,14 @@ export function OrderDetails({ orderId, open }: IOrderDetailsProps) {
               {order.orderItems.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell>{item.product.name}</TableCell>
-                  <TableCell className='text-right'>{item.quantity}</TableCell>
-                  <TableCell className='text-right'>
+                  <TableCell className="text-right">{item.quantity}</TableCell>
+                  <TableCell className="text-right">
                     {(item.priceInCents / 100).toLocaleString('pt-BR', {
                       style: 'currency',
                       currency: 'BRL',
                     })}
                   </TableCell>
-                  <TableCell className='text-right'>
+                  <TableCell className="text-right">
                     {((item.priceInCents / 100) * item.quantity).toLocaleString(
                       'pt-BR',
                       {
@@ -126,7 +127,7 @@ export function OrderDetails({ orderId, open }: IOrderDetailsProps) {
             <TableFooter>
               <TableRow>
                 <TableCell colSpan={3}>Total do pedido</TableCell>
-                <TableCell className='font-medium text-right'>
+                <TableCell className="font-medium text-right">
                   {(order.totalInCents / 100).toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL',
@@ -136,6 +137,8 @@ export function OrderDetails({ orderId, open }: IOrderDetailsProps) {
             </TableFooter>
           </Table>
         </div>
+      ) : (
+        <OrderDetailsSkeleton />
       )}
     </DialogContent>
   );

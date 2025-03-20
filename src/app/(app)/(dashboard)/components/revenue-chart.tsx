@@ -12,6 +12,8 @@ import { getDailyRevenueInPeriod } from '@/api/get-daily-revenue-in-period';
 
 import colors from 'tailwindcss/colors';
 
+import { Loader2 } from 'lucide-react';
+
 import {
   ResponsiveContainer,
   LineChart,
@@ -53,7 +55,7 @@ export function RevenueChart() {
         receipt: chartItem.receipt / 100,
       };
     });
-  }, []);
+  }, [dailyRevenueInPeriod]);
 
   return (
     <Card className="col-span-6">
@@ -73,7 +75,7 @@ export function RevenueChart() {
       </CardHeader>
 
       <CardContent>
-        {chartData && (
+        {chartData ? (
           <ResponsiveContainer width="100%" height={240}>
             <LineChart style={{ fontSize: 12 }} data={chartData}>
               <XAxis dataKey="date" axisLine={false} tickLine={false} dy={16} />
@@ -101,6 +103,10 @@ export function RevenueChart() {
               />
             </LineChart>
           </ResponsiveContainer>
+        ) : (
+          <div className="h-[240px] w-full flex items-center justify-center">
+            <Loader2 className="h-8 w-8 text-muted-foreground animate-spin" />
+          </div>
         )}
       </CardContent>
     </Card>

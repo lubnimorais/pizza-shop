@@ -21,17 +21,20 @@
       "recommended": true,
       "complexity": {
         "noForEach": "off",
-        "noUselessCatch": "off"
+        "noUselessCatch": "off",
+        "useOptionalChain": "off",
+        "noEmptyTypeParameters": "warn"
       },
       "a11y": {
         "noSvgWithoutTitle": "off",
         "useButtonType": "off"
       },
       "suspicious": {
-        "noArrayIndexKey": "info"
+        "noArrayIndexKey": "info",
+        "noConsole": "warn"
       },
       "correctness": {
-        "useExhaustiveDependencies": "off"
+        "useExhaustiveDependencies": "warn"
       }
     }
   },

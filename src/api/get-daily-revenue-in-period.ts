@@ -23,6 +23,7 @@ export async function getDailyRevenueInPeriod({
       },
     }
   );
+  console.log('🚀 ~ response:', response.data);
 
   return response.data;
 }

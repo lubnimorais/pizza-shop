@@ -7,6 +7,7 @@ import { DollarSign } from 'lucide-react';
 import { getMonthRevenueAmount } from '@/api/get-month-revenue';
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { MetricCardSkeleton } from './metric-card-skeleton';
 
 export function MonthRevenueCard() {
   const { data: monthRevenueAmount } = useQuery({
@@ -25,7 +26,7 @@ export function MonthRevenueCard() {
       </CardHeader>
 
       <CardContent className="space-y-1">
-        {monthRevenueAmount && (
+        {monthRevenueAmount ? (
           <>
             <span className="font-bold text-2xl tracking-tight">
               {(monthRevenueAmount.receipt / 100).toLocaleString('pt-BR', {
@@ -52,6 +53,8 @@ export function MonthRevenueCard() {
               )}
             </p>
           </>
+        ) : (
+          <MetricCardSkeleton />
         )}
       </CardContent>
     </Card>
