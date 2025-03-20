@@ -12,7 +12,8 @@
     "lineEnding": "lf",
     "formatWithErrors": true,
     "attributePosition": "auto",
-    "bracketSpacing": true
+    "bracketSpacing": true,
+    "useEditorconfig": true
   },
   "linter": {
     "enabled": true,
@@ -40,7 +41,7 @@
       "arrowParentheses": "always",
       "bracketSpacing": true,
       "bracketSameLine": false,
-      "jsxQuoteStyle": "single",
+      "jsxQuoteStyle": "double",
       "quoteProperties": "asNeeded",
       "quoteStyle": "single",
       "semicolons": "always",
