@@ -16,7 +16,7 @@ export function NavLink({ children, ...props }: INavLinkProps) {
   return (
     <Link
       data-current={pathName === props.href}
-      className='flex items-center gap-1.5 font-medium text-sm text-muted-foreground hover:text-foreground data-[current=true]:text-foreground'
+      className="flex items-center gap-1.5 font-medium text-sm text-muted-foreground hover:text-foreground data-[current=true]:text-foreground"
       {...props}
     >
       {children}

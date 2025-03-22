@@ -11,6 +11,7 @@ import { ThemeProvider } from '@/components/Theme/ThemeProvider';
 import { queryClient } from '@/lib/react-query';
 
 import '../styles/globals.css';
+import { MSWComponent } from '@/components/MSWComponent';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -33,11 +34,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' suppressHydrationWarning className='antialiased'>
+    <html lang="en" suppressHydrationWarning className="antialiased">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider attribute='class'>
+          <ThemeProvider attribute="class">
             <Toaster richColors />
+
+            {/* <MSWComponent /> */}
 
             {children}
           </ThemeProvider>

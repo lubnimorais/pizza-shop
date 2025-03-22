@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:test": "NODE_ENV=test next dev --turbopack -p 5555",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -45,16 +46,21 @@
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.2.0",
+    "@testing-library/user-event": "14.6.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "4.3.4",
     "happy-dom": "17.4.4",
     "jsdom": "26.0.0",
+    "msw": "2.7.3",
     "prettier": "3.5.3",
     "prettier-plugin-tailwindcss": "0.6.11",
     "typescript": "^5",
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "3.0.9"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }
