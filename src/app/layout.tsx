@@ -11,6 +11,7 @@ import { ThemeProvider } from '@/components/Theme/ThemeProvider';
 import { queryClient } from '@/lib/react-query';
 
 import '../styles/globals.css';
+
 import { MSWComponent } from '@/components/MSWComponent';
 
 const geistSans = Geist({
